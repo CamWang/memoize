@@ -42,6 +42,8 @@ export default function RootLayout() {
                 options={{ headerShown: false }}
               />
               <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="register" options={{ headerShown: false }} />
+              <Stack.Screen name="splash" options={{ headerShown: false }} />
               <Stack.Screen name="+not-found" />
             </Stack>
           </AuthProvider>

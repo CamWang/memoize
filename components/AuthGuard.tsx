@@ -18,7 +18,7 @@ export const AuthGuard = ({ children }: AuthGuardProps): JSX.Element | null => {
 
   useEffect(() => {
     if (isLayoutMounted && !user) {
-      router.replace('/login'); // Redirect only after layout is mounted
+      router.replace('/splash'); // Redirect only after layout is mounted
     }
   }, [user, isLayoutMounted, router]);
 
