@@ -13,7 +13,7 @@ interface LoginResponse {
     id: number;
     username: string;
     email: string;
-    // Add any other user fields that come from the API
+    created_at: string;
   };
 }
 
@@ -36,13 +36,17 @@ export const authApi = {
   },
 
   login: async (username: string, password: string) => {
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
+    const formData = {
+      username: username,
+      password: password,
+    };
 
     const response = await fetch(`${BASE_URL}/token`, {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
     });
 
     if (!response.ok) {

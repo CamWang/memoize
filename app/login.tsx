@@ -9,7 +9,7 @@ import { ArrowLeft } from '@tamagui/lucide-icons';
 
 export default function Login(): JSX.Element {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -18,8 +18,8 @@ export default function Login(): JSX.Element {
   const router = useRouter();
 
   const handleLogin = async () => {
-    if (!formData.email || !formData.password) {
-      setError('Please fill in all fields');
+    if (!formData.username || !formData.password) {
+      setError('Username and password are required to sign you in');
       return;
     }
 
@@ -27,7 +27,7 @@ export default function Login(): JSX.Element {
       setIsLoading(true);
       setError('');
       
-      const response = await authApi.login(formData.email, formData.password);
+      const response = await authApi.login(formData.username, formData.password);
       login({
         access_token: response.access_token,
         user: response.user
@@ -80,17 +80,17 @@ export default function Login(): JSX.Element {
         <Form onSubmit={handleLogin} space>
           <YStack space="$4">
             <YStack>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="email"
+                id="username"
                 size="$5"
                 borderWidth={0}
-                placeholder="Enter Email"
-                keyboardType="email-address"
+                placeholder="Enter your username"
+                keyboardType="default"
                 autoCapitalize="none"
-                value={formData.email}
+                value={formData.username}
                 onChangeText={(text) => {
-                  setFormData(prev => ({ ...prev, email: text }));
+                  setFormData(prev => ({ ...prev, username: text }));
                   setError('');
                 }}
               />
@@ -102,7 +102,7 @@ export default function Login(): JSX.Element {
                 id="password"
                 size="$5"
                 borderWidth={0}
-                placeholder="Enter Password"
+                placeholder="Enter your password"
                 secureTextEntry
                 value={formData.password}
                 onChangeText={(text) => {

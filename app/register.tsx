@@ -9,7 +9,7 @@ import { ArrowLeft } from '@tamagui/lucide-icons';
 
 export default function Register(): JSX.Element {
   const [formData, setFormData] = useState({
-    fullName: '',
+    username: '',
     email: '',
     password: '',
   });
@@ -19,18 +19,21 @@ export default function Register(): JSX.Element {
   const router = useRouter();
 
   const handleRegister = async () => {
+    if (!formData.username || !formData.email || !formData.password) {
+      setError('All fields are required to sign you up');
+      return;
+    }
 
     try {
       setIsLoading(true);
       setError('');
-
       await authApi.register({
-        username: formData.fullName,
+        username: formData.username,
         email: formData.email,
         password: formData.password,
       });
 
-      const loginResponse = await authApi.login(formData.email, formData.password);
+      const loginResponse = await authApi.login(formData.username, formData.password);
       login({
         access_token: loginResponse.access_token,
         user: loginResponse.user
@@ -82,15 +85,15 @@ export default function Register(): JSX.Element {
         <Form onSubmit={handleRegister} space>
           <YStack space="$4">
             <YStack>
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName">Username</Label>
               <Input
                 id="fullName"
                 size="$5"
                 borderWidth={0}
-                placeholder="Enter Full Name"
-                value={formData.fullName}
+                placeholder="Get yourself a username"
+                value={formData.username}
                 onChangeText={(text) => {
-                  setFormData(prev => ({ ...prev, fullName: text }));
+                  setFormData(prev => ({ ...prev, username: text }));
                   setError('');
                 }}
               />
@@ -102,7 +105,7 @@ export default function Register(): JSX.Element {
                 id="email"
                 size="$5"
                 borderWidth={0}
-                placeholder="Enter Email"
+                placeholder="Enter your email"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={formData.email}
@@ -119,7 +122,7 @@ export default function Register(): JSX.Element {
                 id="password"
                 size="$5"
                 borderWidth={0}
-                placeholder="Enter Password"
+                placeholder="Set a strong password"
                 secureTextEntry
                 value={formData.password}
                 onChangeText={(text) => {
