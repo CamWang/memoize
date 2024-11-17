@@ -17,20 +17,57 @@ interface LoginResponse {
   };
 }
 
-interface Category {
-  id?: number;
+export interface Category {
+  id: number;
+  name: string;
+  description: string;
+  priority: number;
+  created_at: string;
+  created_by: string;
+}
+
+export interface Card {
+  id: number;
+  front: string;
+  back: string;
+  category_id: number;
+  tags: string[];
+  created_at: string;
+  username: string;
+  study_count: number;
+  next_study: string;
+  category: Category;
+}
+
+interface CreateCategoryRequest {
   name: string;
   description: string;
   priority: number;
 }
 
-interface Card {
-  id?: number;
+interface CreateCardRequest {
   front: string;
   back: string;
-  tags: string[];
   category_id: number;
-  study_count?: number;
+  tags: string[];
+}
+
+interface UpdateCardRequest {
+  front?: string;
+  back?: string;
+  category_id?: number;
+  tags?: string[];
+}
+
+interface ListParams {
+  skip?: number;
+  limit?: number;
+}
+
+interface ListCardsParams extends ListParams {
+  study?: boolean;
+  category_id?: number;
+  tag?: string;
 }
 
 export const authApi = {
@@ -96,7 +133,7 @@ export const createAuthenticatedRequest = (token: string) => {
 
 export const categoryApi = {
   create: (request: ReturnType<typeof createAuthenticatedRequest>) => 
-    async (data: Category) => {
+    async (data: CreateCategoryRequest): Promise<Category> => {
       return request('/categories/', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -104,14 +141,19 @@ export const categoryApi = {
     },
 
   list: (request: ReturnType<typeof createAuthenticatedRequest>) => 
-    async () => {
-      return request('/categories/');
+    async (params?: ListParams): Promise<Category[]> => {
+      const queryParams = new URLSearchParams();
+      if (params?.skip) queryParams.append('skip', params.skip.toString());
+      if (params?.limit) queryParams.append('limit', params.limit.toString());
+      
+      const query = queryParams.toString();
+      return request(`/categories/${query ? `?${query}` : ''}`);
     },
 };
 
 export const cardApi = {
   create: (request: ReturnType<typeof createAuthenticatedRequest>) => 
-    async (data: Card) => {
+    async (data: CreateCardRequest): Promise<Card> => {
       return request('/cards/', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -119,16 +161,31 @@ export const cardApi = {
     },
 
   list: (request: ReturnType<typeof createAuthenticatedRequest>) => 
-    async (categoryId?: number, tag?: string) => {
-      const params = new URLSearchParams();
-      if (categoryId) params.append('category_id', categoryId.toString());
-      if (tag) params.append('tag', tag);
+    async (params?: ListCardsParams): Promise<Card[]> => {
+      const queryParams = new URLSearchParams();
       
-      return request(`/cards/${params.toString() ? `?${params.toString()}` : ''}`);
+      if (params?.study !== undefined) {
+        queryParams.append('study', params.study.toString());
+      }
+      if (params?.category_id) {
+        queryParams.append('category_id', params.category_id.toString());
+      }
+      if (params?.tag) {
+        queryParams.append('tag', params.tag);
+      }
+      if (params?.skip) {
+        queryParams.append('skip', params.skip.toString());
+      }
+      if (params?.limit) {
+        queryParams.append('limit', params.limit.toString());
+      }
+      
+      const query = queryParams.toString();
+      return request(`/cards/${query ? `?${query}` : ''}`);
     },
 
   update: (request: ReturnType<typeof createAuthenticatedRequest>) => 
-    async (id: number, data: Partial<Card>) => {
+    async (id: number, data: UpdateCardRequest): Promise<Card> => {
       return request(`/cards/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -136,18 +193,30 @@ export const cardApi = {
     },
 
   delete: (request: ReturnType<typeof createAuthenticatedRequest>) => 
-    async (id: number) => {
+    async (id: number): Promise<{ message: string }> => {
       return request(`/cards/${id}`, {
         method: 'DELETE',
       });
     },
 
   study: (request: ReturnType<typeof createAuthenticatedRequest>) => 
-    async (id: number, success: boolean) => {
+    async (id: number, success: boolean): Promise<{ message: string }> => {
       return request(`/cards/${id}/study`, {
         method: 'POST',
         body: JSON.stringify({ success }),
       });
     },
+};
+
+export const handleApiError = (error: any) => {
+  if (error.status === 400) {
+    throw new Error('Bad Request: Invalid data provided');
+  } else if (error.status === 401) {
+    throw new Error('Unauthorized: Please log in again');
+  } else if (error.status === 404) {
+    throw new Error('Not Found: The requested resource does not exist');
+  } else {
+    throw new Error(error.detail || 'An unexpected error occurred');
+  }
 };
 

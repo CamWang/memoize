@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { Button, Text, XStack, YStack } from 'tamagui';
 import { LinearGradient } from 'tamagui/linear-gradient'
 import { StyleSheet, View } from 'react-native';
+import { useAuth } from '@/context/AuthContext';
 
 export default function SplashScreen() {
   const router = useRouter();

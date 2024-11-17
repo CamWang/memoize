@@ -27,7 +27,6 @@ export default function TabLayout() {
           tabBarActiveTintColor: theme.accentColor?.val,
           tabBarInactiveTintColor: theme.accentBackground?.val,
           tabBarButton: HapticTab,
-
         }}>
         <Tabs.Screen
           name="index"

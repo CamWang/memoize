@@ -6,6 +6,7 @@ import { authApi } from '../services/api';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
 import { ArrowLeft } from '@tamagui/lucide-icons';
+import { useEffect } from 'react';
 
 export default function Login(): JSX.Element {
   const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ export default function Login(): JSX.Element {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -32,13 +33,18 @@ export default function Login(): JSX.Element {
         access_token: response.access_token,
         user: response.user
       });
-      router.replace('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      router.replace('/');
+    }
+  }, [user]);
 
   return (
     <View style={styles.container}>

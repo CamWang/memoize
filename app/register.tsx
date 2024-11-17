@@ -6,7 +6,7 @@ import { authApi } from '../services/api';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
 import { ArrowLeft } from '@tamagui/lucide-icons';
-
+import { useEffect } from 'react';
 export default function Register(): JSX.Element {
   const [formData, setFormData] = useState({
     username: '',
@@ -15,7 +15,7 @@ export default function Register(): JSX.Element {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const router = useRouter();
 
   const handleRegister = async () => {
@@ -38,14 +38,18 @@ export default function Register(): JSX.Element {
         access_token: loginResponse.access_token,
         user: loginResponse.user
       });
-      
-      router.replace('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed');
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      router.replace('/');
+    }
+  }, [user]);
 
   return (
     <View style={styles.container}>

@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import { TamaguiProvider, Theme } from 'tamagui';
 import config from '@/tamagui.config';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { StudyProvider } from '@/context/StudyContext';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import '../i18n';
@@ -36,16 +37,18 @@ export default function RootLayout() {
         <Theme name={colorScheme}>
           <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
           <AuthProvider>
-            <Stack>
-              <Stack.Screen
-                name="(tabs)"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="login" options={{ headerShown: false }} />
-              <Stack.Screen name="register" options={{ headerShown: false }} />
-              <Stack.Screen name="splash" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
+            <StudyProvider>
+              <Stack>
+                <Stack.Screen
+                  name="(tabs)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="login" options={{ headerShown: false }} />
+                <Stack.Screen name="register" options={{ headerShown: false }} />
+                <Stack.Screen name="splash" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </StudyProvider>
           </AuthProvider>
         </Theme>
       </TamaguiProvider>
