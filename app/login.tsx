@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'expo-router';
 import { Button, Input, YStack, Text, XStack, Form, Label } from 'tamagui';
-import { authApi, userApi } from '../services/api';
+import { authApi } from '../services/api';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
 import { ArrowLeft } from '@tamagui/lucide-icons';
@@ -87,6 +87,7 @@ export default function Login(): JSX.Element {
                 borderWidth={0}
                 placeholder="Enter your username"
                 keyboardType="default"
+                textContentType="username"
                 autoCapitalize="none"
                 value={formData.username}
                 onChangeText={(text) => {
@@ -104,6 +105,7 @@ export default function Login(): JSX.Element {
                 borderWidth={0}
                 placeholder="Enter your password"
                 secureTextEntry
+                textContentType="password"
                 value={formData.password}
                 onChangeText={(text) => {
                   setFormData(prev => ({ ...prev, password: text }));

@@ -90,6 +90,7 @@ export default function Register(): JSX.Element {
                 id="fullName"
                 size="$5"
                 borderWidth={0}
+                textContentType="username"
                 placeholder="Get yourself a username"
                 value={formData.username}
                 onChangeText={(text) => {
@@ -107,6 +108,7 @@ export default function Register(): JSX.Element {
                 borderWidth={0}
                 placeholder="Enter your email"
                 keyboardType="email-address"
+                textContentType="emailAddress"
                 autoCapitalize="none"
                 value={formData.email}
                 onChangeText={(text) => {
@@ -124,6 +126,7 @@ export default function Register(): JSX.Element {
                 borderWidth={0}
                 placeholder="Set a strong password"
                 secureTextEntry
+                textContentType="password"
                 value={formData.password}
                 onChangeText={(text) => {
                   setFormData(prev => ({ ...prev, password: text }));
