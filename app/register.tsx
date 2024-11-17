@@ -141,7 +141,7 @@ export default function Register(): JSX.Element {
             <Button
               size="$5"
               theme="active"
-              backgroundColor="$blue10"
+              backgroundColor={isLoading? "$gray10": "$blue10"}
               color="$white1"
               marginTop="$4"
               onPress={handleRegister}

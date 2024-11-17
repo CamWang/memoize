@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'expo-router';
 import { Button, Input, YStack, Text, XStack, Form, Label } from 'tamagui';
-import { authApi } from '../services/api';
+import { authApi, userApi } from '../services/api';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
 import { ArrowLeft } from '@tamagui/lucide-icons';
@@ -66,7 +66,7 @@ export default function Login(): JSX.Element {
       </LinearGradient>
 
       <YStack
-        space="$4"
+        gap="$4"
         padding="$4"
         backgroundColor="white"
         borderTopLeftRadius={30}
@@ -77,8 +77,8 @@ export default function Login(): JSX.Element {
           Welcome Back
         </Text>
 
-        <Form onSubmit={handleLogin} space>
-          <YStack space="$4">
+        <Form onSubmit={handleLogin} gap>
+          <YStack gap="$4">
             <YStack>
               <Label htmlFor="username">Username</Label>
               <Input
@@ -121,7 +121,7 @@ export default function Login(): JSX.Element {
             <Button
               size="$5"
               theme="active"
-              backgroundColor="$blue10"
+              backgroundColor={isLoading? "$gray10": "$blue10"}
               color="$white1"
               marginTop="$4"
               onPress={handleLogin}
@@ -133,7 +133,7 @@ export default function Login(): JSX.Element {
             <XStack justifyContent="center" space="$2">
               <Text>Don't have an account?</Text>
               <Text
-                color="$blue10"
+                color={isLoading? "$gray10": "$blue10"}
                 onPress={() => router.replace('/register')}
               >
                 Sign up
